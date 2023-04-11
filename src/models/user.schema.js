@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       enum: Object.values(AuthRoles),
-      default: AuthRoles,
+      default: AuthRoles.USER,
     },
     forgotPasswordToken: String,
     forgotPasswordExpiry: Date,
