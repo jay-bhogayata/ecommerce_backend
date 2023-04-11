@@ -16,7 +16,7 @@ export const signUp = asyncHandle(async (req, res) => {
     throw new CustomError("please add all required fields", 400);
   }
 
-  const existingUser = User.findOne({ email: email });
+  const existingUser = await User.findOne({ email });
   //                    or
   //const existingUser = User.findOne({email });
 
@@ -31,10 +31,8 @@ export const signUp = asyncHandle(async (req, res) => {
     password,
   });
 
-  const token = User.getJWTtoken();
-
+  const token = user.getJWTtoken();
   user.password = undefined;
-
   // store token in user cookie
   res.cookie("token", token, cookieOptions);
 
@@ -48,16 +46,16 @@ export const signUp = asyncHandle(async (req, res) => {
 export const login = asyncHandle(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
     throw new CustomError("user does not exists", 400);
   }
 
-  const isPasswordMatches = User.comparePassword(password);
+  const isPasswordMatches = user.comparePassword(password);
 
   if (isPasswordMatches) {
-    const token = User.getJWTtoken();
+    const token = user.getJWTtoken();
     user.password = undefined;
     res.cookie("token", token, cookieOptions);
     return res.status(200).json({

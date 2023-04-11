@@ -41,18 +41,16 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.method = {
-  // compare password
+userSchema.methods = {
   comparePassword: async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
   },
   // generate jwt token
   getJWTtoken: function () {
-    jwt.sign({ _id: this._id }, config.JWT_SECRET, {
+    return jwt.sign({ _id: this._id, role: this.role }, config.JWT_SECRET, {
       expiresIn: config.JWT_EXPIRY,
     });
   },
-
   // generate forgot password token
   generateForgotPasswordToken: function () {
     const forgotToken = crypto.randomBytes(20).toString("hex");
