@@ -1,0 +1,23 @@
+services:
+  ecommerce-app:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://ecommerce-db:27017/ecoomDB
+    depends_on:
+      - ecommerce-db
+
+  ecommerce-db:
+    image: mongo:4.4
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=ecoomDB
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:
+    name: ecommerce-mongodb-data
+
