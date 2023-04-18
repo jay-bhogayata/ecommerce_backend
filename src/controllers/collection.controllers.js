@@ -1,5 +1,5 @@
 import Collection from "../models/collection.schema.js";
-import CustomError from "../utils/CustomError";
+import CustomError from "../utils/CustomError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const createCollection = asyncHandler(async (req, res) => {
@@ -59,8 +59,7 @@ export const deleteCollection = asyncHandler(async (req, res) => {
     throw new CustomError("Collection not found", 400);
   }
 
-  await collectionToBeDeleted.remove();
-
+  await Collection.findOneAndDelete(collectionId);
   res.status(200).json({
     success: true,
     message: "collection deleted successfully",
