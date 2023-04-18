@@ -59,7 +59,7 @@ export const deleteCollection = asyncHandler(async (req, res) => {
     throw new CustomError("Collection not found", 400);
   }
 
-  await Collection.findOneAndDelete(collectionId);
+  await Collection.findByIdAndDelete(collectionId);
   res.status(200).json({
     success: true,
     message: "collection deleted successfully",
