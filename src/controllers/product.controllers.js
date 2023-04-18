@@ -1,7 +1,7 @@
 import Product from "../models/product.schema.js";
 import formidable from "formidable";
 import { s3FileUpload, s3deleteFile } from "../services/imageUpload.js";
-import { Mongoose } from "mongoose";
+import Mongoose from "mongoose";
 import asyncHandler from "../utils/asyncHandler.js";
 import CustomError from "../utils/CustomError.js";
 import config from "../config/index.js";
@@ -15,7 +15,6 @@ export const addProduct = asyncHandler(async (req, res) => {
       throw new CustomError(err.message || "something went wrong", 500);
     }
     let productId = new Mongoose.Types.ObjectId().toHexString();
-    console.log(field, files);
 
     if (
       !fields.name ||
@@ -28,8 +27,8 @@ export const addProduct = asyncHandler(async (req, res) => {
 
     let imageArrayRes = Promise.all(
       Object.keys(files).map(async (file, index) => {
-        const element = file[filekey];
-        console.log(element);
+        const element = files[file];
+
         const data = fs.readFileSync(element.filepath);
 
         const upload = await s3FileUpload({
@@ -38,7 +37,6 @@ export const addProduct = asyncHandler(async (req, res) => {
           body: data,
           contentType: element.mimetype,
         });
-        console.log(upload);
         return {
           secure_url: upload.Location,
         };
@@ -75,7 +73,7 @@ export const getAllProduct = asyncHandler(async (req, res) => {
 export const getProductById = asyncHandler(async (req, res) => {
   const { id: productId } = req.params;
 
-  const product = Product.findById(productId);
+  const product = await Product.findById(productId);
 
   if (!product) {
     throw new CustomError("no product found", 404);
@@ -88,13 +86,14 @@ export const getProductById = asyncHandler(async (req, res) => {
 
 export const getProductByCollectionId = asyncHandler(async (req, res) => {
   const { id: collectionId } = req.params;
-  const products = Product.find({ collectionId });
+  const products = await Product.find({ collectionId });
   if (!products) {
     throw new CustomError("no products found in this collection", 404);
   }
-  if (!product) {
-    throw new CustomError("no product found", 404);
-  }
+  res.status(200).json({
+    success: true,
+    products,
+  });
 });
 
 export const deleteProduct = asyncHandler(async (req, res) => {
@@ -116,7 +115,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 
   await deletePhotos;
 
-  await Product.remove();
+  await Product.findByIdAndDelete(productId);
 
   res.status(200).json({
     success: true,
