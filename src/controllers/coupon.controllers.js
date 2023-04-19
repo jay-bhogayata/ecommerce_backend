@@ -62,7 +62,7 @@ export const getAllActiveCoupons = asyncHandler(async (req, res) => {
   });
 });
 
-export const disableToken = asyncHandler(async (req, res) => {
+export const disableCoupon = asyncHandler(async (req, res) => {
   const { id: couponId } = req.params;
   const isExists = await Coupon.findById(couponId);
   if (!isExists) {

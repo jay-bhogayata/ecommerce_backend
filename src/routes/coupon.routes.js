@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   addCoupon,
   deleteCoupon,
-  disableToken,
+  disableCoupon,
   getAllActiveCoupons,
   getAllCoupons,
 } from "../controllers/coupon.controllers.js";
@@ -13,6 +13,6 @@ router.post("/addCoupon", addCoupon);
 router.post("/deleteCoupon/:id", deleteCoupon);
 router.get("/getAllCoupons", getAllCoupons);
 router.get("/getAllActiveCoupons", getAllActiveCoupons);
-router.post("/disableToken/:id", disableToken);
+router.post("/disableCoupon/:id", disableCoupon);
 
 export default router;
