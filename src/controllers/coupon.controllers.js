@@ -39,3 +39,40 @@ export const deleteCoupon = asyncHandler(async (req, res) => {
     message: "coupon deleted successfully.",
   });
 });
+
+export const getAllCoupons = asyncHandler(async (req, res) => {
+  const coupons = await Coupon.find();
+  if (!coupons) {
+    throw new CustomError("No coupon found", 404);
+  }
+  res.status(200).json({
+    success: true,
+    coupons,
+  });
+});
+
+export const getAllActiveCoupons = asyncHandler(async (req, res) => {
+  const coupon = await Coupon.find({ active: true });
+  if (!coupon) {
+    throw new CustomError("No active token found");
+  }
+  res.status(200).json({
+    success: true,
+    coupon,
+  });
+});
+
+export const disableToken = asyncHandler(async (req, res) => {
+  const { id: couponId } = req.params;
+  const isExists = await Coupon.findById(couponId);
+  if (!isExists) {
+    throw new CustomError("coupon with this id is not found", 404);
+  }
+  await Coupon.findByIdAndUpdate(couponId, {
+    active: false,
+  });
+  res.status(200).json({
+    success: true,
+    message: "token disable successfully",
+  });
+});
