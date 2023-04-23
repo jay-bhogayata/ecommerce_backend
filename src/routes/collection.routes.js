@@ -9,6 +9,6 @@ const router = Router();
 
 router.post("/createCollection", createCollection);
 router.get("/getAllCollection", getAllCollection);
-router.post("/deleteCollection/:id", deleteCollection);
-router.post("/updateCollection/:id", updateCollection);
+router.delete("/deleteCollection/:id", deleteCollection);
+router.put("/updateCollection/:id", updateCollection);
 export default router;

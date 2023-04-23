@@ -10,9 +10,9 @@ import {
 const router = Router();
 
 router.post("/addCoupon", addCoupon);
-router.post("/deleteCoupon/:id", deleteCoupon);
+router.delete("/deleteCoupon/:id", deleteCoupon);
 router.get("/getAllCoupons", getAllCoupons);
 router.get("/getAllActiveCoupons", getAllActiveCoupons);
-router.post("/disableCoupon/:id", disableCoupon);
+router.put("/disableCoupon/:id", disableCoupon);
 
 export default router;
