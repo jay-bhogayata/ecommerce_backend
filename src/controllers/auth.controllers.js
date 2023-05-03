@@ -54,7 +54,7 @@ export const login = asyncHandle(async (req, res) => {
     throw new CustomError("user does not exists", 400);
   }
 
-  const isPasswordMatches = user.comparePassword(password);
+  const isPasswordMatches = await user.comparePassword(password);
 
   if (isPasswordMatches) {
     const token = user.getJWTtoken();
